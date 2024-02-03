@@ -11,6 +11,6 @@ export async function getSiteTitle(url: string) {
 		}
 		return title;
 	} catch (error) {
-		console.log(error);
+		throw new Error("Failed to fetch website");
 	}
 }
