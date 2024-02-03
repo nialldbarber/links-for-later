@@ -1,5 +1,5 @@
+import { api } from "@/lib/api";
 import { parse } from "node-html-parser";
-import { api } from "./fetch";
 
 export async function getSiteTitle(url: string) {
 	try {

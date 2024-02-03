@@ -1,7 +1,7 @@
 import { getSiteTitle } from "@/lib/scraper";
+import { useLinksStore } from "@/store/links";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import { useLinksStore } from "./store/links";
 
 export default function Modal() {
 	const [title, setTitle] = useState("");

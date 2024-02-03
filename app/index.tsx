@@ -1,9 +1,9 @@
+import { Row } from "@/components/row";
 import { Container } from "@/design-system/components/container";
 import { useLinksStore } from "@/store/links";
 import { Link } from "expo-router";
 import { AddCircle } from "iconsax-react-native";
 import { Text, View } from "react-native";
-import { Row } from "./components/row";
 
 export default function App() {
 	const { links } = useLinksStore();
