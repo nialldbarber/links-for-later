@@ -4,23 +4,23 @@ export function calculateTimeSinceAdded(date: Date) {
 	const diffInMinutes = Math.floor(diffInSeconds / 60);
 	const diffInHours = Math.floor(diffInMinutes / 60);
 	const diffInDays = Math.floor(diffInHours / 24);
-	const diffInMonths = Math.floor(diffInDays / 30.44); // Average number of days in a month
-	const diffInYears = Math.floor(diffInDays / 365.25); // Account for leap years
+	const diffInMonths = Math.floor(diffInDays / 30.44);
+	const diffInYears = Math.floor(diffInDays / 365.25);
 
 	if (diffInYears > 0) {
-		return `${diffInYears} year(s)`;
+		return `${diffInYears} yrs`;
 	}
 	if (diffInMonths > 0) {
-		return `${diffInMonths} month(s)`;
+		return `${diffInMonths} mnths`;
 	}
 	if (diffInDays > 0) {
-		return `${diffInDays} day(s)`;
+		return `${diffInDays} dys`;
 	}
 	if (diffInHours > 0) {
-		return `${diffInHours} hour(s)`;
+		return `${diffInHours} hrs`;
 	}
 	if (diffInMinutes > 0) {
-		return `${diffInMinutes} minute(s)`;
+		return `${diffInMinutes} mins`;
 	}
-	return `${diffInSeconds} second(s)`;
+	return `${diffInSeconds} secs`;
 }
