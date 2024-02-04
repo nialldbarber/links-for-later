@@ -7,6 +7,10 @@ module.exports = {
 			display: ["PlusJakartaSans_800ExtraBold"],
 			body: ["PlusJakartaSans_600SemiBold"],
 		},
+		colors: {
+			primary: "#FF906D",
+			danger: "#EF4444",
+		},
 		extend: {},
 	},
 	plugins: [],

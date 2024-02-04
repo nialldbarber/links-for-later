@@ -1,32 +1,49 @@
 import { getSiteTitle } from "@/lib/scraper";
 import { cn } from "@/lib/styles";
 import { useLinksStore } from "@/store/links";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { z } from "zod";
 
 type Props = {
 	dismissModal: () => void;
 };
 
+export const NewLinkSchema = z.object({
+	title: z.string(),
+	link: z.string().min(1),
+});
+export type NewLink = z.infer<typeof NewLinkSchema>;
+
 export default function Modal({ dismissModal }: Props) {
+	const {
+		control,
+		handleSubmit,
+		getValues,
+		setValue,
+		formState: { errors },
+	} = useForm<NewLink>({
+		resolver: zodResolver(NewLinkSchema),
+	});
+
 	const { setAddLink } = useLinksStore();
-	const [title, setTitle] = useState("");
-	const [link, setLink] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
 	const ref = useRef<TextInput | null>(null);
 
-	const titleIsFilled = title.length;
+	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
 		if (titleIsFilled) return;
-		if (!link) {
+		if (!getValues("link")) {
 			setIsError(true);
 		}
 		try {
 			setIsLoading(true);
-			const fetchedTitle = await getSiteTitle(link);
-			setTitle(fetchedTitle);
+			const fetchedTitle = await getSiteTitle(getValues("link"));
+			setValue("title", fetchedTitle as string);
 		} catch (error) {
 			setIsError(true);
 		} finally {
@@ -34,7 +51,7 @@ export default function Modal({ dismissModal }: Props) {
 		}
 	}
 
-	function addLinkToList() {
+	function addLinkToList({ title, link }: { title: string; link: string }) {
 		if (title?.length === 0 || link.length === 0) {
 			setIsError(true);
 			return;
@@ -58,35 +75,46 @@ export default function Modal({ dismissModal }: Props) {
 
 	return (
 		<View className="z-40 p-5 mt-5">
-			<Text>{isError ? "ERROR" : ""}</Text>
+			<View className="self-center">
+				<Text className="text-danger font-display">
+					{isError ? "Sorry! - try again" : ""}
+				</Text>
+			</View>
 			<View className="my-3">
-				<TextInput
-					ref={ref}
-					value={title}
-					onChangeText={(text) => setTitle(text)}
-					className="bg-white text-lg flex items-center px-5 rounded-xl shadow-sm"
-					style={{ width: "100%", height: 50 }}
-					placeholder="Add a custom title..."
-					multiline={false}
-					numberOfLines={1}
+				<Controller
+					control={control}
+					render={({ field: { onChange, value } }) => (
+						<TextInput
+							ref={ref}
+							value={value}
+							onChangeText={(text) => onChange(text)}
+							className="bg-white px-5 rounded-full shadow-sm"
+							style={{ width: "100%", height: 50 }}
+							placeholder="Add a custom title..."
+						/>
+					)}
+					name="title"
 				/>
 			</View>
 			<View className="my-3">
-				<TextInput
-					value={link}
-					onChangeText={(text) => setLink(text)}
-					className="flex items-center bg-white text-lg px-5 rounded-xl shadow-sm"
-					style={{ width: "100%", height: 50 }}
-					placeholder="Link to website..."
-					multiline={false}
-					numberOfLines={1}
+				<Controller
+					control={control}
+					render={({ field: { onChange, value } }) => (
+						<TextInput
+							value={value}
+							onChangeText={(text) => onChange(text)}
+							className="bg-white px-5 rounded-full shadow-sm h-16"
+							placeholder="Link to website..."
+						/>
+					)}
+					name="link"
 				/>
 			</View>
 			<View className="flex-row items-center justify-center">
 				<Pressable
 					className={cn(
 						"mt-5 p-5 mr-3 rounded-full shadow-sm",
-						titleIsFilled ? "bg-gray-100" : "bg-gray-800",
+						titleIsFilled ? "bg-gray-100" : "bg-primary",
 					)}
 					onPress={invokeFetchLink}
 				>
@@ -100,8 +128,8 @@ export default function Modal({ dismissModal }: Props) {
 					</Text>
 				</Pressable>
 				<Pressable
-					className="mt-5 ml-3 p-5 rounded-full bg-gray-800 shadow-sm"
-					onPress={addLinkToList}
+					className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
+					onPress={handleSubmit(addLinkToList)}
 				>
 					<Text className="font-display text-center text-lg text-white">
 						Add Link to list
