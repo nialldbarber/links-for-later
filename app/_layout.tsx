@@ -7,7 +7,7 @@ import {
 	PlusJakartaSans_800ExtraBold,
 	useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
-
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 
 export default function RootLayout() {
@@ -23,5 +23,9 @@ export default function RootLayout() {
 		return null;
 	}
 
-	return <StackNavigator />;
+	return (
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<StackNavigator />
+		</GestureHandlerRootView>
+	);
 }

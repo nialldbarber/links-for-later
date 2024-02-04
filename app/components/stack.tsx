@@ -9,13 +9,6 @@ export function StackNavigator() {
 					headerShown: false,
 				}}
 			/>
-			<Stack.Screen
-				name="modal"
-				options={{
-					headerShown: false,
-					presentation: "modal",
-				}}
-			/>
 		</Stack>
 	);
 }
