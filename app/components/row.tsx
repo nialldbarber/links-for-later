@@ -1,9 +1,11 @@
+import { Pressable } from "@/core/pressable";
 import { calculateTimeSinceAdded } from "@/lib/dates";
 import { useLinksStore, type Link } from "@/store/links";
+import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
 import { Trash } from "iconsax-react-native";
 import { useMemo } from "react";
-import { Dimensions, Pressable, Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
 	runOnJS,
@@ -49,6 +51,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 				trashOpacity.value = withTiming(0, undefined, (isFinished) => {
 					if (isFinished) {
 						runOnJS(setRemoveLink)(id);
+						Haptics.selectionAsync();
 					}
 				});
 			} else {
@@ -89,7 +92,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 						</Text>
 					</View>
 					<Pressable onPress={() => Linking.openURL(url)}>
-						<View className="bg-gray-100 rounded-lg p-5 flex-row">
+						<View className="bg-gray-100 min-h-[90px] rounded-lg p-5 flex-row">
 							<Text className="font-body text-lg">{title}</Text>
 						</View>
 					</Pressable>
@@ -97,7 +100,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 			</GestureDetector>
 			<Animated.View
 				style={iconAnimatedStyle}
-				className="absolute top-3 right-5 flex items-center justify-center -z-10"
+				className="absolute top-5 right-5 flex items-center justify-center -z-10"
 			>
 				<Trash variant="Bold" color="#FE6D6C" size={30} />
 			</Animated.View>

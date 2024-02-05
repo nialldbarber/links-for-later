@@ -1,10 +1,12 @@
+import { Pressable } from "@/core/pressable";
 import { getSiteTitle } from "@/lib/scraper";
 import { cn } from "@/lib/styles";
 import { useLinksStore } from "@/store/links";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { z } from "zod";
 
 type Props = {
@@ -69,10 +71,6 @@ export default function Modal({ dismissModal }: Props) {
 		}
 	}
 
-	useEffect(() => {
-		ref.current?.focus();
-	}, []);
-
 	return (
 		<View className="z-40 p-5 mt-5">
 			<View className="self-center">
@@ -84,8 +82,7 @@ export default function Modal({ dismissModal }: Props) {
 				<Controller
 					control={control}
 					render={({ field: { onChange, value } }) => (
-						<TextInput
-							ref={ref}
+						<BottomSheetTextInput
 							value={value}
 							onChangeText={(text) => onChange(text)}
 							className="bg-white px-5 rounded-full shadow-sm"
@@ -100,7 +97,7 @@ export default function Modal({ dismissModal }: Props) {
 				<Controller
 					control={control}
 					render={({ field: { onChange, value } }) => (
-						<TextInput
+						<BottomSheetTextInput
 							value={value}
 							onChangeText={(text) => onChange(text)}
 							className="bg-white px-5 rounded-full shadow-sm h-16"

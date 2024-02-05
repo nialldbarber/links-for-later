@@ -7,6 +7,7 @@ import {
 	PlusJakartaSans_800ExtraBold,
 	useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 
@@ -25,7 +26,9 @@ export default function RootLayout() {
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<StackNavigator />
+			<BottomSheetModalProvider>
+				<StackNavigator />
+			</BottomSheetModalProvider>
 		</GestureHandlerRootView>
 	);
 }

@@ -1,23 +1,20 @@
+import { Gradient } from "@/components/gradient";
 import Modal from "@/components/modal";
 import { Row } from "@/components/row";
+import { Pressable } from "@/core/pressable";
 import { Container } from "@/design-system/components/container";
 import { useLinksStore } from "@/store/links";
-import {
-	BottomSheetModal,
-	BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
 import { AddCircle } from "iconsax-react-native";
 import { useCallback, useMemo, useRef } from "react";
-import { Dimensions, Pressable, Text, View } from "react-native";
-
-const { width, height } = Dimensions.get("screen");
+import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function App() {
+	const insets = useSafeAreaInsets();
 	const { links } = useLinksStore();
-
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const snapPoints = useMemo(() => ["38%", "38%"], []);
 	const invokePresentModal = useCallback(() => {
@@ -30,25 +27,10 @@ export default function App() {
 	const isLinksEmpty = links.length === 0;
 
 	return (
-		<BottomSheetModalProvider>
-			<LinearGradient
-				colors={["rgba(173, 216, 230, 0.4)", "rgba(255, 165, 0, 0.3)"]}
-				style={{
-					flex: 1,
-					position: "absolute",
-					left: 0,
-					right: 0,
-					bottom: 0,
-					top: 0,
-					width,
-					height,
-				}}
-			/>
+		<>
+			<Gradient />
 			<Container>
-				<View className="pt-5 pb-8 self-center">
-					<Text className="text-4xl font-display">Your links</Text>
-				</View>
-				<View className="flex-1">
+				<View className="flex-1 pt-5 pb-12" style={{ top: insets.top }}>
 					<FlashList
 						data={links}
 						renderItem={({ item }) => (
@@ -93,6 +75,6 @@ export default function App() {
 					<Modal dismissModal={invokeDismissModal} />
 				</BlurView>
 			</BottomSheetModal>
-		</BottomSheetModalProvider>
+		</>
 	);
 }
