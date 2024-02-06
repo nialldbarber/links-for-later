@@ -10,6 +10,7 @@ module.exports = {
 		colors: {
 			primary: "#FF906D",
 			danger: "#EF4444",
+			slate: "gb(148 163 184)",
 		},
 		extend: {},
 	},

@@ -32,30 +32,35 @@ export default function Modal({ dismissModal }: Props) {
 
 	const { setAddLink } = useLinksStore();
 	const [isLoading, setIsLoading] = useState(false);
-	const [isError, setIsError] = useState(false);
+	const [isError, setIsError] = useState("");
 	const ref = useRef<TextInput | null>(null);
 
 	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
+		setIsError("");
+
 		if (titleIsFilled) return;
 		if (!getValues("link")) {
-			setIsError(true);
+			setIsError("Please provide a link");
 		}
 		try {
 			setIsLoading(true);
 			const fetchedTitle = await getSiteTitle(getValues("link"));
 			setValue("title", fetchedTitle as string);
 		} catch (error) {
-			setIsError(true);
+			setIsError("Couldn't find a title - enter your own");
 		} finally {
 			setIsLoading(false);
 		}
 	}
 
 	function addLinkToList({ title, link }: { title: string; link: string }) {
+		// setIsError("");
+		console.log("I AM BEING CALLED");
+
 		if (title?.length === 0 || link.length === 0) {
-			setIsError(true);
+			setIsError("Please make sure there's a title and link");
 			return;
 		}
 
@@ -75,7 +80,7 @@ export default function Modal({ dismissModal }: Props) {
 		<View className="z-40 p-5 mt-5">
 			<View className="self-center">
 				<Text className="text-danger font-display">
-					{isError ? "Sorry! - try again" : ""}
+					{isError.length ? isError : ""}
 				</Text>
 			</View>
 			<View className="my-3">

@@ -100,7 +100,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 			</GestureDetector>
 			<Animated.View
 				style={iconAnimatedStyle}
-				className="absolute top-5 right-5 flex items-center justify-center -z-10"
+				className="absolute top-7 right-5 flex items-center justify-center -z-10"
 			>
 				<Trash variant="Bold" color="#FE6D6C" size={30} />
 			</Animated.View>
