@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Links4Later",
 		"slug": "links-for-later",
-		"version": "1.0.1",
+		"version": "1.0.3",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
