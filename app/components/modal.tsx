@@ -15,13 +15,24 @@ type Props = {
 };
 
 export const NewLinkSchema = z.object({
-	title: z.string(),
-	link: z.string().min(1),
+	title: z
+		.string({ required_error: "Please add a title" })
+		.min(2, "Must be at least 2 characters long"),
+	link: z
+		.string({ required_error: "Please add a link" })
+		.min(2, "Link must be valid"),
 });
 export type NewLink = z.infer<typeof NewLinkSchema>;
 
 export function Modal({ dismissModal }: Props) {
-	const { control, handleSubmit, getValues, setValue } = useForm<NewLink>({
+	const {
+		control,
+		handleSubmit,
+		getValues,
+		setValue,
+		clearErrors,
+		formState: { errors },
+	} = useForm<NewLink>({
 		resolver: zodResolver(NewLinkSchema),
 	});
 	const { setAddLink } = useLinksStore();
@@ -30,8 +41,6 @@ export function Modal({ dismissModal }: Props) {
 	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
-		setIsError("");
-
 		if (titleIsFilled) return;
 		if (!getValues("link")) {
 			setIsError("Please provide a link");
@@ -40,6 +49,8 @@ export function Modal({ dismissModal }: Props) {
 			setIsLoading(true);
 			const fetchedTitle = await getSiteTitle(getValues("link"));
 			setValue("title", fetchedTitle as string);
+			clearErrors("title");
+			setIsError("");
 		} catch (error) {
 			setIsError("Couldn't find a title - enter your own");
 		} finally {
@@ -48,10 +59,8 @@ export function Modal({ dismissModal }: Props) {
 	}
 
 	function addLinkToList({ title, link }: { title: string; link: string }) {
-		setIsError("");
-
 		if (title?.length === 0 || link.length === 0) {
-			setIsError("Please make sure there's a title and link");
+			setIsError("Please add a link and title");
 			return;
 		}
 
@@ -95,7 +104,19 @@ export function Modal({ dismissModal }: Props) {
 							/>
 						)}
 						name="title"
+						rules={{ required: true }}
 					/>
+					{isError === "" && (
+						<View>
+							{errors.title?.message && (
+								<View className="self-center pt-3">
+									<Text className="text-danger font-display">
+										{errors.title?.message}
+									</Text>
+								</View>
+							)}
+						</View>
+					)}
 				</View>
 				<View className="my-3">
 					<Controller
@@ -110,6 +131,13 @@ export function Modal({ dismissModal }: Props) {
 						)}
 						name="link"
 					/>
+					{errors.link?.message && (
+						<View className="self-center pt-3">
+							<Text className="text-danger font-display">
+								{errors.link?.message}
+							</Text>
+						</View>
+					)}
 				</View>
 				<View className="flex-row items-center justify-center">
 					<Pressable

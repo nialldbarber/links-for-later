@@ -23,6 +23,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 	const rowItem = useSharedValue(90);
 	const marginBottom = useSharedValue(40);
 	const trashOpacity = useSharedValue(1);
+	const isSwiping = useSharedValue(false);
 
 	const { setRemoveLink } = useLinksStore();
 
@@ -36,13 +37,17 @@ export function Row({ id, title, url, createdAt }: Link) {
 		.maxPointers(1)
 		.failOffsetY([-10, 10])
 		.activeOffsetX([-10, 10])
-		.onStart(() => {
+		.onStart((event) => {
 			contextX.value = translateX.value;
+			isSwiping.value = false;
 		})
 		.onChange((event) => {
 			translateX.value = event.translationX + contextX.value;
+			if (Math.abs(event.translationX) > 10) {
+				isSwiping.value = true;
+			}
 		})
-		.onEnd(() => {
+		.onEnd((event) => {
 			const isRowDismissed = translateX.value < X_THRESHOLD;
 			if (isRowDismissed) {
 				translateX.value = withTiming(-width, undefined, (isFinished) => {
@@ -57,6 +62,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 				translateX.value = withSpring(0, { damping: 15, stiffness: 100 });
 				contextX.value = 0;
 			}
+			isSwiping.value = false;
 		});
 
 	const nativeGesture = Gesture.Native();
@@ -93,9 +99,23 @@ export function Row({ id, title, url, createdAt }: Link) {
 							{timeSinceLinkAdded} ago
 						</Text>
 					</View>
-					<Pressable onPress={() => Linking.openURL(url)}>
+					<Pressable
+						onPress={() => {
+							if (!isSwiping.value) {
+								Linking.openURL(url);
+							} else {
+								isSwiping.value = false;
+							}
+						}}
+					>
 						<View className="bg-gray-100 min-h-[90px] rounded-lg p-5 flex-row">
-							<Text className="font-body text-lg">{title}</Text>
+							<Text
+								className="font-body text-lg"
+								numberOfLines={2}
+								ellipsizeMode="tail"
+							>
+								{title}
+							</Text>
 						</View>
 					</Pressable>
 				</Animated.View>
