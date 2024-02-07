@@ -84,7 +84,7 @@ export default function Settings() {
 			{/* Misc */}
 			<View className="m-5 items-center justify-end">
 				<Text className="font-body text-sm">Built with ❤️ by Niall Barber</Text>
-				<Text className="font-body text-sm">Links For Later 1.0.0 (0)</Text>
+				<Text className="font-body text-sm">Links For Later 1.0.1 (0)</Text>
 			</View>
 		</View>
 	);
