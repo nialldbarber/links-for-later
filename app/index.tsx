@@ -1,36 +1,40 @@
 import { Gradient } from "@/components/gradient";
-import Modal from "@/components/modal";
+import { Modal as CustomModal } from "@/components/modal";
 import { Row } from "@/components/row";
 import { Pressable } from "@/core/pressable";
 import { Container } from "@/design-system/components/container";
 import { useLinksStore } from "@/store/links";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import { BlurView } from "expo-blur";
 import { AddCircle } from "iconsax-react-native";
-import { useCallback, useMemo, useRef } from "react";
-import { Text, View } from "react-native";
+import { useState } from "react";
+import {
+	KeyboardAvoidingView,
+	Modal,
+	Platform,
+	Text,
+	View,
+} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function App() {
 	const insets = useSafeAreaInsets();
 	const { links } = useLinksStore();
-	const bottomSheetRef = useRef<BottomSheetModal>(null);
-	const snapPoints = useMemo(() => ["38%", "38%"], []);
-	const invokePresentModal = useCallback(() => {
-		bottomSheetRef.current?.present();
-	}, []);
-	const invokeDismissModal = useCallback(() => {
-		bottomSheetRef.current?.dismiss();
-	}, []);
 
+	const [showModal, setShowModal] = useState(false);
+	function handleModalVisibility(visible: boolean) {
+		setShowModal(visible);
+	}
 	const isLinksEmpty = links.length === 0;
 
 	return (
-		<>
+		<GestureHandlerRootView style={{ flex: 1 }}>
 			<Gradient />
 			<Container>
-				<View className="flex-1 pt-5 pb-12" style={{ top: insets.top }}>
+				<View
+					className="flex-1 pt-5 pb-12"
+					style={{ top: insets.top, minHeight: 200 }}
+				>
 					<FlashList
 						data={links}
 						renderItem={({ item }) => (
@@ -60,21 +64,27 @@ export default function App() {
 						</View>
 					</>
 				)}
-				<Pressable onPress={invokePresentModal}>
+				<Pressable onPress={() => handleModalVisibility(true)}>
 					<AddCircle size={65} variant="Bold" color="#FF906D" />
 				</Pressable>
 			</View>
-			<BottomSheetModal
-				ref={bottomSheetRef}
-				index={1}
-				snapPoints={snapPoints}
-				backgroundStyle={{ backgroundColor: "transparent" }}
-				handleHeight={50}
+			<Modal
+				animationType="slide"
+				transparent
+				visible={showModal}
+				onRequestClose={() => handleModalVisibility(false)}
 			>
-				<BlurView intensity={85} className="flex-1 z-30">
-					<Modal dismissModal={invokeDismissModal} />
-				</BlurView>
-			</BottomSheetModal>
-		</>
+				<KeyboardAvoidingView
+					className="flex-1 justify-end"
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+				>
+					<View className="flex-1 justify-end">
+						<View className="p-5">
+							<CustomModal dismissModal={() => handleModalVisibility(false)} />
+						</View>
+					</View>
+				</KeyboardAvoidingView>
+			</Modal>
+		</GestureHandlerRootView>
 	);
 }

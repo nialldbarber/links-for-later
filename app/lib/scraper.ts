@@ -9,7 +9,6 @@ export async function getSiteTitle(url: string) {
 		if (title?.length === 0) {
 			throw new Error("Title not found");
 		}
-		console.log(title);
 		return title;
 	} catch (error) {
 		throw new Error("Failed to fetch website");

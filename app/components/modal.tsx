@@ -2,9 +2,10 @@ import { Pressable } from "@/core/pressable";
 import { getSiteTitle } from "@/lib/scraper";
 import { cn } from "@/lib/styles";
 import { useLinksStore } from "@/store/links";
-import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState } from "react";
+import { BlurView } from "expo-blur";
+import { CloseCircle } from "iconsax-react-native";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 import { z } from "zod";
@@ -19,22 +20,13 @@ export const NewLinkSchema = z.object({
 });
 export type NewLink = z.infer<typeof NewLinkSchema>;
 
-export default function Modal({ dismissModal }: Props) {
-	const {
-		control,
-		handleSubmit,
-		getValues,
-		setValue,
-		formState: { errors },
-	} = useForm<NewLink>({
+export function Modal({ dismissModal }: Props) {
+	const { control, handleSubmit, getValues, setValue } = useForm<NewLink>({
 		resolver: zodResolver(NewLinkSchema),
 	});
-
 	const { setAddLink } = useLinksStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState("");
-	const ref = useRef<TextInput | null>(null);
-
 	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
@@ -56,8 +48,7 @@ export default function Modal({ dismissModal }: Props) {
 	}
 
 	function addLinkToList({ title, link }: { title: string; link: string }) {
-		// setIsError("");
-		console.log("I AM BEING CALLED");
+		setIsError("");
 
 		if (title?.length === 0 || link.length === 0) {
 			setIsError("Please make sure there's a title and link");
@@ -77,67 +68,76 @@ export default function Modal({ dismissModal }: Props) {
 	}
 
 	return (
-		<View className="z-40 p-5 mt-5">
-			<View className="self-center">
-				<Text className="text-danger font-display">
-					{isError.length ? isError : ""}
-				</Text>
-			</View>
-			<View className="my-3">
-				<Controller
-					control={control}
-					render={({ field: { onChange, value } }) => (
-						<BottomSheetTextInput
-							value={value}
-							onChangeText={(text) => onChange(text)}
-							className="bg-white px-5 rounded-full shadow-sm"
-							style={{ width: "100%", height: 50 }}
-							placeholder="Add a custom title..."
-						/>
-					)}
-					name="title"
-				/>
-			</View>
-			<View className="my-3">
-				<Controller
-					control={control}
-					render={({ field: { onChange, value } }) => (
-						<BottomSheetTextInput
-							value={value}
-							onChangeText={(text) => onChange(text)}
-							className="bg-white px-5 rounded-full shadow-sm h-16"
-							placeholder="Link to website..."
-						/>
-					)}
-					name="link"
-				/>
-			</View>
-			<View className="flex-row items-center justify-center">
-				<Pressable
-					className={cn(
-						"mt-5 p-5 mr-3 rounded-full shadow-sm",
-						titleIsFilled ? "bg-gray-100" : "bg-primary",
-					)}
-					onPress={invokeFetchLink}
-				>
-					<Text
-						className={cn(
-							"font-display text-center text-lg",
-							titleIsFilled ? "text-gray-400" : "text-white",
+		<>
+			<BlurView
+				intensity={80}
+				className="inset-0 absolute -z-10 top-0 left-0 bottom-0 right-0 bt rounded-tr-[30px] rounded-tl-[30px] overflow-hidden"
+			/>
+			<Pressable className="absolute top-4 right-4" onPress={dismissModal}>
+				<CloseCircle color="#FF906D" variant="Bold" size={30} />
+			</Pressable>
+			<View className="z-40 p-5 mt-5">
+				<View className="self-center">
+					<Text className="text-danger font-display">
+						{isError.length ? isError : ""}
+					</Text>
+				</View>
+				<View className="my-3">
+					<Controller
+						control={control}
+						render={({ field: { onChange, value } }) => (
+							<TextInput
+								value={value}
+								onChangeText={(text) => onChange(text)}
+								className="bg-white px-5 rounded-full shadow-sm"
+								style={{ width: "100%", height: 50 }}
+								placeholder="Add a custom title..."
+							/>
 						)}
+						name="title"
+					/>
+				</View>
+				<View className="my-3">
+					<Controller
+						control={control}
+						render={({ field: { onChange, value } }) => (
+							<TextInput
+								value={value}
+								onChangeText={(text) => onChange(text)}
+								className="bg-white px-5 rounded-full shadow-sm h-16"
+								placeholder="Link to website..."
+							/>
+						)}
+						name="link"
+					/>
+				</View>
+				<View className="flex-row items-center justify-center">
+					<Pressable
+						className={cn(
+							"mt-5 p-5 mr-3 rounded-full shadow-sm",
+							titleIsFilled ? "bg-gray-100" : "bg-primary",
+						)}
+						onPress={invokeFetchLink}
 					>
-						{isLoading ? "Loading..." : "Generate title"}
-					</Text>
-				</Pressable>
-				<Pressable
-					className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
-					onPress={handleSubmit(addLinkToList)}
-				>
-					<Text className="font-display text-center text-lg text-white">
-						Add Link to list
-					</Text>
-				</Pressable>
+						<Text
+							className={cn(
+								"font-display text-center text-lg",
+								titleIsFilled ? "text-gray-400" : "text-white",
+							)}
+						>
+							{isLoading ? "Loading..." : "Generate title"}
+						</Text>
+					</Pressable>
+					<Pressable
+						className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
+						onPress={handleSubmit(addLinkToList)}
+					>
+						<Text className="font-display text-center text-lg text-white">
+							Add Link to list
+						</Text>
+					</Pressable>
+				</View>
 			</View>
-		</View>
+		</>
 	);
 }

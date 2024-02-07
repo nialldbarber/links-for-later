@@ -1,7 +1,6 @@
 import { Pressable } from "@/core/pressable";
 import { calculateTimeSinceAdded } from "@/lib/dates";
 import { useLinksStore, type Link } from "@/store/links";
-import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
 import { Trash } from "iconsax-react-native";
 import { useMemo } from "react";
@@ -34,7 +33,10 @@ export function Row({ id, title, url, createdAt }: Link) {
 	}, [createdAt]);
 
 	const onDragToDelete = Gesture.Pan()
-		.onBegin(() => {
+		.maxPointers(1)
+		.failOffsetY([-10, 10])
+		.activeOffsetX([-10, 10])
+		.onStart(() => {
 			contextX.value = translateX.value;
 		})
 		.onChange((event) => {
@@ -42,23 +44,23 @@ export function Row({ id, title, url, createdAt }: Link) {
 		})
 		.onEnd(() => {
 			const isRowDismissed = translateX.value < X_THRESHOLD;
-
 			if (isRowDismissed) {
-				translateX.value = withTiming(-width);
-				contextX.value = withTiming(-width);
-				rowItem.value = withTiming(0);
-				marginBottom.value = withTiming(0);
-				trashOpacity.value = withTiming(0, undefined, (isFinished) => {
+				translateX.value = withTiming(-width, undefined, (isFinished) => {
 					if (isFinished) {
 						runOnJS(setRemoveLink)(id);
-						Haptics.selectionAsync();
 					}
 				});
+				rowItem.value = withTiming(0);
+				marginBottom.value = withTiming(0);
+				trashOpacity.value = withTiming(0);
 			} else {
-				translateX.value = withSpring(0, { duration: 1700 });
-				contextX.value = withSpring(0, { duration: 1700 });
+				translateX.value = withSpring(0, { damping: 15, stiffness: 100 });
+				contextX.value = 0;
 			}
 		});
+
+	const nativeGesture = Gesture.Native();
+	const composeGestures = Gesture.Simultaneous(onDragToDelete, nativeGesture);
 
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [
@@ -84,7 +86,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 			className="relative w-full mt-5"
 			style={containerAnimatedStyle}
 		>
-			<GestureDetector gesture={onDragToDelete}>
+			<GestureDetector gesture={composeGestures}>
 				<Animated.View style={animatedStyle}>
 					<View className="bg-gray-800 p-2 rounded-full absolute -top-5 right-4 z-20">
 						<Text className="font-display text-white text-sm">

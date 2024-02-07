@@ -1,4 +1,4 @@
-rootProject.name = 'links-for-later'
+rootProject.name = 'Links4Later'
 
 dependencyResolutionManagement {
   versionCatalogs {
