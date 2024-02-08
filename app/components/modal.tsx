@@ -1,3 +1,4 @@
+import { iconColor } from "@/constants/colors";
 import { Pressable } from "@/core/pressable";
 import { getSiteTitle } from "@/lib/scraper";
 import { cn } from "@/lib/styles";
@@ -83,7 +84,7 @@ export function Modal({ dismissModal }: Props) {
 				className="inset-0 absolute -z-10 top-0 left-0 bottom-0 right-0 bt rounded-tr-[30px] rounded-tl-[30px] overflow-hidden"
 			/>
 			<Pressable className="absolute top-4 right-4" onPress={dismissModal}>
-				<CloseCircle color="#FF906D" variant="Bold" size={30} />
+				<CloseCircle color={iconColor} variant="Bold" size={30} />
 			</Pressable>
 			<View className="z-40 p-5 mt-5">
 				<View className="self-center">

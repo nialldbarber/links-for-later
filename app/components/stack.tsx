@@ -1,3 +1,4 @@
+import { iconColor } from "@/constants/colors";
 import { usePreferencesStore } from "@/store/preferences";
 import * as Haptics from "expo-haptics";
 import { Link } from "expo-router";
@@ -25,7 +26,7 @@ export function StackNavigator() {
 									href="/settings"
 									onPress={() => hapticFeedback && Haptics.impactAsync()}
 								>
-									<Setting2 size={40} color="#FF906D" variant="Bold" />
+									<Setting2 size={40} color={iconColor} variant="Bold" />
 								</Link>
 							</View>
 						</View>

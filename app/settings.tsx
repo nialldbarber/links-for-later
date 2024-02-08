@@ -1,4 +1,5 @@
 import { Gradient } from "@/components/gradient";
+import { iconColor } from "@/constants/colors";
 import { Pressable } from "@/core/pressable";
 import { usePreferencesStore } from "@/store/preferences";
 import * as Haptics from "expo-haptics";
@@ -22,7 +23,7 @@ export default function Settings() {
 						href="/"
 						onPress={() => hapticFeedback && Haptics.impactAsync()}
 					>
-						<ArrowLeft size={35} variant="Bold" color="#FF906D" />
+						<ArrowLeft size={35} variant="Bold" color={iconColor} />
 					</Link>
 				</View>
 			</View>

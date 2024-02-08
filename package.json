@@ -12,6 +12,7 @@
 		"@expo-google-fonts/plus-jakarta-sans": "^0.2.3",
 		"@gorhom/bottom-sheet": "^5.0.0-alpha.6",
 		"@hookform/resolvers": "^3.3.4",
+		"@react-native-menu/menu": "^0.9.1",
 		"@shopify/flash-list": "1.6.3",
 		"clsx": "^2.1.0",
 		"expo": "~50.0.5",

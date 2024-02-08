@@ -990,6 +990,8 @@ PODS:
   - React-Mapbuffer (0.73.2):
     - glog
     - React-debug
+  - react-native-menu (0.9.1):
+    - React
   - react-native-mmkv (2.11.0):
     - MMKV (>= 1.2.13)
     - React-Core
@@ -1231,6 +1233,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1360,6 +1363,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-menu:
+    :path: "../node_modules/@react-native-menu/menu"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
   react-native-safe-area-context:
@@ -1467,6 +1472,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 03644c063fc3621c9a4e8bf263a8150909129618
   React-logger: 66b168e2b2bee57bd8ce9e69f739d805732a5570
   React-Mapbuffer: 9ee041e1d7be96da6d76a251f92e72b711c651d6
+  react-native-menu: 9728f90160c36b9a75481fc76e05354b99d54c59
   react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   React-nativeconfig: d753fbbc8cecc8ae413d615599ac378bbf6999bb

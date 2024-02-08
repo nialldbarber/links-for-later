@@ -1,3 +1,4 @@
+import { iconColor } from "@/constants/colors";
 import { Pressable } from "@/core/pressable";
 import { calculateTimeSinceAdded } from "@/lib/dates";
 import { useLinksStore, type Link } from "@/store/links";
@@ -124,7 +125,7 @@ export function Row({ id, title, url, createdAt }: Link) {
 				style={iconAnimatedStyle}
 				className="absolute top-7 right-5 flex items-center justify-center -z-10"
 			>
-				<Trash variant="Bold" color="#FE6D6C" size={30} />
+				<Trash variant="Bold" color={iconColor} size={30} />
 			</Animated.View>
 		</Animated.View>
 	);
