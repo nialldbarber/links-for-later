@@ -39,6 +39,8 @@ export function Modal({ dismissModal }: Props) {
 	const { setAddLink } = useLinksStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState("");
+	const [showTitleInput, setShowTitleInput] = useState(false);
+
 	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
@@ -52,6 +54,7 @@ export function Modal({ dismissModal }: Props) {
 			setValue("title", fetchedTitle as string);
 			clearErrors("title");
 			setIsError("");
+			setShowTitleInput(true);
 		} catch (error) {
 			setIsError("Couldn't find a title - enter your own");
 		} finally {
@@ -92,33 +95,35 @@ export function Modal({ dismissModal }: Props) {
 						{isError.length ? isError : ""}
 					</Text>
 				</View>
-				<View className="my-3">
-					<Controller
-						control={control}
-						render={({ field: { onChange, value } }) => (
-							<TextInput
-								value={value}
-								onChangeText={(text) => onChange(text)}
-								className="bg-white px-5 rounded-full shadow-sm"
-								style={{ width: "100%", height: 50 }}
-								placeholder="Add a custom title..."
-							/>
-						)}
-						name="title"
-						rules={{ required: true }}
-					/>
-					{isError === "" && (
-						<View>
-							{errors.title?.message && (
-								<View className="self-center pt-3">
-									<Text className="text-danger font-display">
-										{errors.title?.message}
-									</Text>
-								</View>
+				{showTitleInput && (
+					<View className="my-3">
+						<Controller
+							control={control}
+							render={({ field: { onChange, value } }) => (
+								<TextInput
+									value={value}
+									onChangeText={(text) => onChange(text)}
+									className="bg-white px-5 rounded-full shadow-sm"
+									style={{ width: "100%", height: 50 }}
+									placeholder="Add a custom title..."
+								/>
 							)}
-						</View>
-					)}
-				</View>
+							name="title"
+							rules={{ required: true }}
+						/>
+						{isError === "" && (
+							<View>
+								{errors.title?.message && (
+									<View className="self-center pt-3">
+										<Text className="text-danger font-display">
+											{errors.title?.message}
+										</Text>
+									</View>
+								)}
+							</View>
+						)}
+					</View>
+				)}
 				<View className="my-3">
 					<Controller
 						control={control}
@@ -157,14 +162,25 @@ export function Modal({ dismissModal }: Props) {
 							{isLoading ? "Loading..." : "Generate title"}
 						</Text>
 					</Pressable>
-					<Pressable
-						className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
-						onPress={handleSubmit(addLinkToList)}
-					>
-						<Text className="font-display text-center text-lg text-white">
-							Add Link to list
-						</Text>
-					</Pressable>
+					{showTitleInput ? (
+						<Pressable
+							className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
+							onPress={handleSubmit(addLinkToList)}
+						>
+							<Text className="font-display text-center text-lg text-white">
+								Add Link to list
+							</Text>
+						</Pressable>
+					) : (
+						<Pressable
+							className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
+							onPress={() => setShowTitleInput(true)}
+						>
+							<Text className="font-display text-center text-lg text-white">
+								Custom title
+							</Text>
+						</Pressable>
+					)}
 				</View>
 			</View>
 		</>
