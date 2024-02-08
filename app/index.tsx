@@ -1,6 +1,7 @@
 import { Gradient } from "@/components/gradient";
 import { Modal as CustomModal } from "@/components/modal";
 import { Row } from "@/components/row";
+import { hitSlop } from "@/core/hitSlop";
 import { Pressable } from "@/core/pressable";
 import { Container } from "@/design-system/components/container";
 import { useLinksStore } from "@/store/links";
@@ -32,7 +33,7 @@ export default function App() {
 			<Gradient />
 			<Container>
 				<View
-					className="flex-1 pt-5 pb-12"
+					className="flex-1 pt-5 pb-28"
 					style={{ top: insets.top, minHeight: 200 }}
 				>
 					<FlashList
@@ -51,7 +52,7 @@ export default function App() {
 					/>
 				</View>
 			</Container>
-			<View className="absolute bottom-10 right-5 items-center">
+			<View className="absolute bottom-8 right-0 items-center">
 				{isLinksEmpty && (
 					<>
 						<View className="mb-4">
@@ -64,7 +65,11 @@ export default function App() {
 						</View>
 					</>
 				)}
-				<Pressable onPress={() => handleModalVisibility(true)}>
+				<Pressable
+					onPress={() => handleModalVisibility(true)}
+					className="p-5"
+					hitSlop={hitSlop}
+				>
 					<AddCircle size={65} variant="Bold" color="#FF906D" />
 				</Pressable>
 			</View>
