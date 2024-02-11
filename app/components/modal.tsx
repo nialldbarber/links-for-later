@@ -9,6 +9,11 @@ import { CloseCircle } from "iconsax-react-native";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withTiming,
+} from "react-native-reanimated";
 import { z } from "zod";
 
 type Props = {
@@ -24,6 +29,8 @@ export const NewLinkSchema = z.object({
 		.min(2, "Link must be valid"),
 });
 export type NewLink = z.infer<typeof NewLinkSchema>;
+
+const [INITIAL_INPUT_HEIGHT, SET_INPUT_HEIGHT] = [0, 80];
 
 export function Modal({ dismissModal }: Props) {
 	const {
@@ -41,6 +48,12 @@ export function Modal({ dismissModal }: Props) {
 	const [isError, setIsError] = useState("");
 	const [showTitleInput, setShowTitleInput] = useState(false);
 
+	const inputHeight = useSharedValue(INITIAL_INPUT_HEIGHT);
+
+	const inputStyles = useAnimatedStyle(() => ({
+		height: inputHeight.value,
+	}));
+
 	const titleIsFilled = getValues("title")?.length;
 
 	async function invokeFetchLink() {
@@ -55,6 +68,7 @@ export function Modal({ dismissModal }: Props) {
 			clearErrors("title");
 			setIsError("");
 			setShowTitleInput(true);
+			inputHeight.value = withTiming(SET_INPUT_HEIGHT);
 		} catch (error) {
 			setIsError("Couldn't find a title - enter your own");
 		} finally {
@@ -95,7 +109,8 @@ export function Modal({ dismissModal }: Props) {
 						{isError.length ? isError : ""}
 					</Text>
 				</View>
-				{showTitleInput && (
+
+				<Animated.View style={inputStyles}>
 					<View className="my-3">
 						<Controller
 							control={control}
@@ -123,7 +138,8 @@ export function Modal({ dismissModal }: Props) {
 							</View>
 						)}
 					</View>
-				)}
+				</Animated.View>
+
 				<View className="my-3">
 					<Controller
 						control={control}
@@ -174,7 +190,10 @@ export function Modal({ dismissModal }: Props) {
 					) : (
 						<Pressable
 							className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
-							onPress={() => setShowTitleInput(true)}
+							onPress={() => {
+								setShowTitleInput(true);
+								inputHeight.value = withTiming(SET_INPUT_HEIGHT);
+							}}
 						>
 							<Text className="font-display text-center text-lg text-white">
 								Custom title

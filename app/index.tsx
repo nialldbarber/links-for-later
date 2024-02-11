@@ -93,6 +93,8 @@ export default function App() {
 							)}
 							keyExtractor={(item) => item.id}
 							estimatedItemSize={20}
+							refreshing={isRefreshing}
+							onRefresh={refresh}
 						/>
 					</View>
 				</View>
