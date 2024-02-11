@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function StackNavigator() {
 	const insets = useSafeAreaInsets();
-	const { hapticFeedback, setHapticFeedback } = usePreferencesStore();
+	const { hapticFeedback } = usePreferencesStore();
 
 	return (
 		<Stack>

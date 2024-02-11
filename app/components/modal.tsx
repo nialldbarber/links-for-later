@@ -83,7 +83,7 @@ export function Modal({ dismissModal }: Props) {
 	return (
 		<>
 			<BlurView
-				intensity={80}
+				intensity={70}
 				className="inset-0 absolute -z-10 top-0 left-0 bottom-0 right-0 bt rounded-tr-[30px] rounded-tl-[30px] overflow-hidden"
 			/>
 			<Pressable className="absolute top-4 right-4" onPress={dismissModal}>
@@ -178,6 +178,7 @@ export function Modal({ dismissModal }: Props) {
 						>
 							<Text className="font-display text-center text-lg text-white">
 								Custom title
+								{/* would be good to animate the height here: */}
 							</Text>
 						</Pressable>
 					)}

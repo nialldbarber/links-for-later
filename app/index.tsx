@@ -1,10 +1,10 @@
+import { Container } from "@/components/container";
 import { Gradient } from "@/components/gradient";
 import { Modal as CustomModal } from "@/components/modal";
 import { Row } from "@/components/row";
 import { iconColor } from "@/constants/colors";
 import { hitSlop } from "@/constants/hitSlop";
 import { Pressable } from "@/core/pressable";
-import { Container } from "@/design-system/components/container";
 import type { FitlerValue } from "@/store/links";
 import { useLinksStore } from "@/store/links";
 import { MenuView } from "@react-native-menu/menu";
@@ -25,6 +25,7 @@ export default function App() {
 		useLinksStore();
 
 	const [showModal, setShowModal] = useState(false);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 	function handleModalVisibility(visible: boolean) {
 		setShowModal(visible);
 	}
@@ -37,6 +38,14 @@ export default function App() {
 			return filterValue === "newest" ? dateB - dateA : dateA - dateB;
 		});
 	}, [links, filterValue]);
+
+	const refresh = () => {
+		setIsRefreshing(true);
+
+		setTimeout(() => {
+			setIsRefreshing(false);
+		}, 2000);
+	};
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
@@ -64,7 +73,9 @@ export default function App() {
 									{ id: "oldest", title: "Oldest" },
 								]}
 							>
-								<Filter size={30} variant="Bold" color={iconColor} />
+								<Pressable forceHaptic>
+									<Filter size={30} variant="Bold" color={iconColor} />
+								</Pressable>
 							</MenuView>
 						</View>
 					</View>

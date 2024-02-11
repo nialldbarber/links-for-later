@@ -1,6 +1,8 @@
+const SURFACE_AREA = 20;
+
 export const hitSlop = {
-	top: 20,
-	left: 20,
-	bottom: 20,
-	right: 20,
+	top: SURFACE_AREA,
+	left: SURFACE_AREA,
+	bottom: SURFACE_AREA,
+	right: SURFACE_AREA,
 };
