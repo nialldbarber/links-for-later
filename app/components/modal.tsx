@@ -192,12 +192,12 @@ export function Modal({ dismissModal }: Props) {
 							className="mt-5 ml-3 p-5 rounded-full bg-primary shadow-sm"
 							onPress={() => {
 								setShowTitleInput(true);
+								setIsError("");
 								inputHeight.value = withTiming(SET_INPUT_HEIGHT);
 							}}
 						>
 							<Text className="font-display text-center text-lg text-white">
 								Custom title
-								{/* would be good to animate the height here: */}
 							</Text>
 						</Pressable>
 					)}
