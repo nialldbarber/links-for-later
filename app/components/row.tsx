@@ -5,7 +5,7 @@ import { useLinksStore, type Link } from "@/store/links";
 import * as Linking from "expo-linking";
 import { Trash } from "iconsax-react-native";
 import { useMemo } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Text, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
 	runOnJS,
@@ -14,9 +14,6 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
-
-const { width } = Dimensions.get("screen");
-const X_THRESHOLD = -width * 0.3;
 
 export function Row({ id, title, url, createdAt }: Link) {
 	const translateX = useSharedValue(0);
@@ -27,6 +24,9 @@ export function Row({ id, title, url, createdAt }: Link) {
 	const isSwiping = useSharedValue(false);
 
 	const { setRemoveLink } = useLinksStore();
+
+	const { width } = useWindowDimensions();
+	const X_THRESHOLD = -width * 0.3;
 
 	const timeSinceLinkAdded = useMemo(() => {
 		const dateObject = new Date(createdAt);

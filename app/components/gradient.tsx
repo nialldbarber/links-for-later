@@ -1,9 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Dimensions } from "react-native";
-
-const { width, height } = Dimensions.get("screen");
+import { useWindowDimensions } from "react-native";
 
 export function Gradient() {
+	const { width, height } = useWindowDimensions();
 	return (
 		<LinearGradient
 			colors={["rgba(173, 216, 230, 0.4)", "rgba(255, 165, 0, 0.3)"]}
